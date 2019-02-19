@@ -1,0 +1,1 @@
+<p class="iblock footer mt20 pt05 pb05 <?php if(isset($width)){echo $width;}?>">&copy; <?php echo YEAR;?>, <?php echo ROC;?></p>
