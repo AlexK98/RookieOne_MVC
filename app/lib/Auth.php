@@ -52,7 +52,7 @@ class Auth
 	private function load(string $list = 'default')
 	{
 		if (empty(trim($list))) {
-			exit(__METHOD__.' [$route] should not be empty<br>');
+			exit(__METHOD__.' [$list] should not be empty<br>');
 		}
 
 		$file = 'app/acl/'.ucfirst($list).'ACL.php';
