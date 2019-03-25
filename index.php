@@ -22,6 +22,8 @@
 
 // DEBUG SECTION ==========================================================
 define('debug', false);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 // MAIN ===================================================================
 require 'app/config/_defines.php';

@@ -54,8 +54,10 @@ class Database
 				$this->createTableIndex(DBase::$table, DBase::$index);
 				$this->addAdminUser(DBase::$table);
 
+				echo 'Site is running fresh, so we created Database with Tables and Admin user';
 				DBase::$msg = 'Site is running fresh, so we created Database with Tables and Admin user';
 			} else {
+				echo 'Error: ' . $e->getMessage();
 				DBase::$msg = 'Error: ' . $e->getMessage();
 			}
 		}
@@ -170,20 +172,20 @@ class Database
 	{
 		// useDatabase() call should precede call of this method
 		$sql = "CREATE TABLE IF NOT EXISTS $table (
-					id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-					role VARCHAR(16) NOT NULL DEFAULT 'rookie',
-					sessid VARCHAR(48) NOT NULL DEFAULT 'none',
-					activity INT(11) NOT NULL,
-					firstname VARCHAR(100) NOT NULL,
-					lastname VARCHAR(100) NOT NULL,
-					email VARCHAR(255) NOT NULL,
-					pass VARCHAR(255) NOT NULL,
-					about VARCHAR(255) NOT NULL,
-					city VARCHAR(60) NOT NULL,
-					country VARCHAR(60) NOT NULL,
-					gender VARCHAR(60) NOT NULL,
-					userimage VARCHAR(255) NOT NULL DEFAULT '_default.jpg'
-				)";
+				id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+				role VARCHAR(16) NOT NULL DEFAULT 'rookie',
+				sessid VARCHAR(48) NOT NULL DEFAULT 'none',
+				activity INT(11) NOT NULL,
+				firstname VARCHAR(100) NOT NULL,
+				lastname VARCHAR(100) NOT NULL,
+				email VARCHAR(255) NOT NULL,
+				pass VARCHAR(255) NOT NULL,
+				about VARCHAR(255) NOT NULL,
+				city VARCHAR(60) NOT NULL,
+				country VARCHAR(60) NOT NULL,
+				gender VARCHAR(60) NOT NULL,
+				userimage VARCHAR(255) NOT NULL DEFAULT '_default.jpg'
+			)";
 		$this->stmt = $this->pdo->prepare($sql);
 
 		$result = $this->pdo->exec($this->stmt->queryString);
@@ -194,10 +196,11 @@ class Database
 		if (debug) { echo __METHOD__.' passed<br>'; }
 	}
 
-	private function createTableIndex($table, $index)
+	private function createTableIndex(string $table, string $index)
 	{
 		// createTable() call should precede call of this method
 		$sql = "CREATE INDEX $index ON $table ($index) USING BTREE;";
+
 		$this->stmt = $this->pdo->prepare($sql);
 
 		$result = $this->pdo->exec($this->stmt->queryString);
@@ -225,7 +228,7 @@ class Database
 			'im' => '_skynet_logo.jpg',
 		];
 		$sql = "INSERT INTO $table (role, firstname, lastname, email, pass, about, city, country, gender, userimage)
-						VALUES (:rl, :fn, :ln, :em, :ps, :ab, :ci, :co, :ge, :im)";
+					VALUES (:rl, :fn, :ln, :em, :ps, :ab, :ci, :co, :ge, :im)";
 
 		$result = $this->queryDb($sql, $params);
 		if ($result === false) {exit(__METHOD__.' failed');}
