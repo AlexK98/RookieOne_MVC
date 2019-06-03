@@ -42,8 +42,9 @@ class Database
 			if ($e->getCode() === 1049) {
 				try {
 					$this->pdo = new PDO('mysql:host='.DBase::$host, DBase::$user, DBase::$pass);
+					$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				} catch (PDOException $q) {
-					DBase::$msg = 'Error: ' . $q->getMessage();
+					DBase::$msg = 'Error: <span style="color: red">'.$e->getMessage().'</span>';
 					exit(DBase::$msg);
 				}
 
@@ -54,11 +55,10 @@ class Database
 				$this->createTableIndex(DBase::$table, DBase::$index);
 				$this->addAdminUser(DBase::$table);
 
-				echo 'Site is running fresh, so we created Database with Tables and Admin user';
-				DBase::$msg = 'Site is running fresh, so we created Database with Tables and Admin user';
+				//echo '<span style="color: orange">Site is running fresh, so we created Database with Tables and Admin user</span><br>';
+				DBase::$msg = '<span style="color: orange">Site is running fresh, so we created Database with Tables and Admin user</span><br>';
 			} else {
-				echo 'Error: ' . $e->getMessage();
-				DBase::$msg = 'Error: ' . $e->getMessage();
+				exit ('Error: <span style="color: red">'.$e->getMessage().'</span>');
 			}
 		}
 	}
@@ -78,7 +78,7 @@ class Database
 		try {
 			$this->stmt = $this->pdo->prepare($sql);
 		} catch (PDOException $e) {
-			DBase::$msg = 'Error: ' . $e->getMessage();
+			DBase::$msg = 'Error: <span style="color: red">'.$e->getMessage().'</span>';
 			return false;
 		}
 
@@ -102,7 +102,7 @@ class Database
 		try {
 			$this->stmt->execute();
 		} catch (PDOException $e) {
-			DBase::$msg = 'Error: ' . $e->getMessage();
+			DBase::$msg = 'Error: <span style="color: red">'.$e->getMessage().'</span>';
 			return false;
 		}
 
@@ -116,7 +116,9 @@ class Database
 		if (debug) { echo '<b>'.__METHOD__.'</b><br>'; }
 
 		$this->stmt = $this->queryDb($sql, $params);
-		if (!$this->stmt) {exit(__METHOD__.' failed');}
+		if (!$this->stmt) {
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
+		}
 
 		$array = $this->stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -130,7 +132,9 @@ class Database
 		if (debug) { echo '<b>'.__METHOD__.'</b><br>'; }
 
 		$this->stmt = $this->queryDb($sql, $params);
-		if (!$this->stmt) {exit(__METHOD__.' failed');}
+		if (!$this->stmt) {
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
+		}
 
 		$value = $this->stmt->fetchColumn();
 
@@ -148,7 +152,7 @@ class Database
 
 		$result = $this->pdo->exec($this->stmt->queryString);
 		if ($result === false) {
-			exit(__METHOD__.' failed');
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
 		}
 
 		if (debug) { echo __METHOD__.' passed<br>'; }
@@ -162,7 +166,7 @@ class Database
 
 		$result = $this->pdo->exec($this->stmt->queryString);
 		if ($result === false) {
-			exit(__METHOD__.' failed');
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
 		}
 
 		if (debug) { echo __METHOD__.' passed<br>'; }
@@ -175,22 +179,22 @@ class Database
 				id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 				role VARCHAR(16) NOT NULL DEFAULT 'rookie',
 				sessid VARCHAR(48) NOT NULL DEFAULT 'none',
-				activity INT(11) NOT NULL,
+				activity INT(11) UNSIGNED NOT NULL DEFAULT '0',
 				firstname VARCHAR(100) NOT NULL,
 				lastname VARCHAR(100) NOT NULL,
 				email VARCHAR(255) NOT NULL,
 				pass VARCHAR(255) NOT NULL,
-				about VARCHAR(255) NOT NULL,
-				city VARCHAR(60) NOT NULL,
-				country VARCHAR(60) NOT NULL,
-				gender VARCHAR(60) NOT NULL,
+				about VARCHAR(255),
+				city VARCHAR(60),
+				country VARCHAR(60),
+				gender VARCHAR(60),
 				userimage VARCHAR(255) NOT NULL DEFAULT '_default.jpg'
 			)";
 		$this->stmt = $this->pdo->prepare($sql);
 
 		$result = $this->pdo->exec($this->stmt->queryString);
 		if ($result === false) {
-			exit(__METHOD__.' failed');
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
 		}
 
 		if (debug) { echo __METHOD__.' passed<br>'; }
@@ -205,7 +209,7 @@ class Database
 
 		$result = $this->pdo->exec($this->stmt->queryString);
 		if ($result === false) {
-			exit(__METHOD__.' failed');
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
 		}
 
 		if (debug) { echo __METHOD__.' passed<br>'; }
@@ -228,10 +232,12 @@ class Database
 			'im' => '_skynet_logo.jpg',
 		];
 		$sql = "INSERT INTO $table (role, firstname, lastname, email, pass, about, city, country, gender, userimage)
-					VALUES (:rl, :fn, :ln, :em, :ps, :ab, :ci, :co, :ge, :im)";
+				VALUES (:rl, :fn, :ln, :em, :ps, :ab, :ci, :co, :ge, :im)";
 
 		$result = $this->queryDb($sql, $params);
-		if ($result === false) {exit(__METHOD__.' failed');}
+		if ($result === false) {
+			exit(__METHOD__.' <span style="color: red">failed</span><br>');
+		}
 
 		if (debug) { echo __METHOD__.' passed<br>'; }
 	}
