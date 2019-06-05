@@ -22,7 +22,7 @@ class DBase
 {
 	public static $host = 'localhost';
 	public static $user = 'root';
-	public static $pass = 'mysql';
+	public static $pass = '';
 
 	public static $dbase = 'rookie';
 	public static $table = 'users';
