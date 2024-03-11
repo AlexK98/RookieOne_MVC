@@ -115,7 +115,7 @@ abstract class View
 	}
 
 	// COMMON HEADER ELEMENTS
-	// (i know, it does not belong here, but I have not decide where to move it)
+	// (i know, it does not belong here, but I have not decided where to move it)
 	// ==================================================================================
 	protected function btnAdmin() : string
 	{

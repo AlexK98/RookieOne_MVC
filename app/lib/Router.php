@@ -68,13 +68,13 @@ class Router
 			View::errorCode(404);
 		}
 
-		// check for availability of corresponding Controlled
+		// check for availability of corresponding Controller
 		$class = 'app\\controllers\\'.ucfirst($this->params['controller']).'Controller';
 		if (!class_exists($class)) {
 			View::errorCode(404);
 		}
 
-		// check for availability of corresponding Action in Controlled
+		// check for availability of corresponding Action in Controller
 		$action = $this->params['action'].'Action';
 		if (!method_exists($class, $action)) {
 			View::errorCode(404);
